@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/prometheus/client_golang/prometheus"
 	"sync"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
 )
 
-var (
-)
+var ()
 
 // Create and setup metrics and collection
 func setupMetricsCollection() {
@@ -57,7 +57,7 @@ func setupMetricsCollection() {
 			metric.prometheus.histogram = vec
 			prometheus.MustRegister(vec)
 		default:
-			panic(fmt.Sprintf("metric type \"\" not defined", metric.Type))
+			panic(fmt.Sprintf("metric type \"%v\" not defined", metric.Type))
 		}
 
 		opts.configuration.Metrics[metricName] = metric
@@ -82,7 +82,6 @@ func runMetricsCollection() {
 
 	callbackChannel := make(chan func())
 
-
 	for metricName := range opts.configuration.Metrics {
 		metric := opts.configuration.Metrics[metricName]
 
@@ -97,7 +96,6 @@ func runMetricsCollection() {
 			}
 		}
 	}
-
 
 	go func() {
 		var callbackList []func()
@@ -116,4 +114,3 @@ func runMetricsCollection() {
 	wg.Wait()
 	close(callbackChannel)
 }
-

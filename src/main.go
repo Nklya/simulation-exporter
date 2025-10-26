@@ -1,39 +1,38 @@
 package main
 
 import (
-	"io/ioutil"
-	"os"
 	"fmt"
 	"net/http"
-	"gopkg.in/yaml.v2"
+	"os"
+	"time"
+
 	"github.com/jessevdk/go-flags"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"time"
+	"gopkg.in/yaml.v2"
 )
 
 const (
-	Author  = "webdevops.io"
-	Version = "0.1.0"
+	Author                         = "webdevops.io"
+	Version                        = "0.1.0"
 	AZURE_RESOURCEGROUP_TAG_PREFIX = "tag_"
 )
 
 var (
-	argparser          *flags.Parser
-	args               []string
-	Logger             *DaemonLogger
-	ErrorLogger        *DaemonLogger
+	argparser   *flags.Parser
+	Logger      *DaemonLogger
+	ErrorLogger *DaemonLogger
 )
 
 var opts struct {
 	// general settings
-	Verbose     []bool `       long:"verbose" short:"v"  env:"VERBOSE"       description:"Verbose mode"`
+	Verbose []bool `       long:"verbose" short:"v"  env:"VERBOSE"       description:"Verbose mode"`
 
 	// server settings
-	ServerBind  string `       long:"bind"               env:"SERVER_BIND"   description:"Server address"               default:":8080"`
-	ScrapeTime  time.Duration `long:"scrape-time"        env:"SCRAPE_TIME"   description:"Scrape time (time.duration)"  default:"5s"`
+	ServerBind string        `       long:"bind"               env:"SERVER_BIND"   description:"Server address"               default:":8080"`
+	ScrapeTime time.Duration `long:"scrape-time"        env:"SCRAPE_TIME"   description:"Scrape time (time.duration)"  default:"5s"`
 
-	ConfigurationFile  string `long:"config-file"        env:"CONFIG"        description:"Configuration file"           required:"true"`
-	configuration      Configuration
+	ConfigurationFile string `long:"config-file"        env:"CONFIGURATION_FILE"        description:"Configuration file"           required:"true"`
+	configuration     Configuration
 }
 
 func main() {
@@ -76,7 +75,7 @@ func initArgparser() {
 	}
 
 	if _, err := os.Stat(opts.ConfigurationFile); os.IsNotExist(err) {
-		fmt.Println(fmt.Sprintf("configuration file \"%v\" doesn't exists", opts.ConfigurationFile))
+		fmt.Printf("configuration file \"%v\" doesn't exists", opts.ConfigurationFile)
 		fmt.Println()
 		argparser.WriteHelp(os.Stdout)
 		os.Exit(1)
@@ -85,7 +84,7 @@ func initArgparser() {
 
 // Init and build Azure authorzier
 func initConfiguration() {
-	data, err := ioutil.ReadFile(opts.ConfigurationFile)
+	data, err := os.ReadFile(opts.ConfigurationFile)
 	if err != nil {
 		panic(err)
 	}
