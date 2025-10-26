@@ -1,29 +1,17 @@
-FROM golang:1.11 as build
+FROM golang:1.24-alpine AS builder
 
-# golang deps
-WORKDIR /tmp/app/
-COPY ./src/glide.yaml /tmp/app/
-COPY ./src/glide.lock /tmp/app/
-RUN curl https://glide.sh/get | sh \
-    && glide install
-
-WORKDIR /go/src/simulation-exporter/src
-COPY ./src /go/src/simulation-exporter/src
-RUN mkdir /app/ \
-    && cp -a /tmp/app/vendor ./vendor/ \
-    && cp -a entrypoint.sh /app/ \
-    && cp -r config/ /app/config/ \
-    && chmod 555 /app/entrypoint.sh \
-    && go build -o /app/simulation-exporter
-
-#############################################
-# FINAL IMAGE
-#############################################
-FROM alpine
-RUN apk add --no-cache \
-        libc6-compat \
-    	ca-certificates
 WORKDIR /app
-COPY --from=build /app/ /app/
+COPY src/go.mod src/go.sum ./
+RUN go mod download
+COPY src/*.go ./
+RUN CGO_ENABLED=0 go build -o /app/simulation-exporter
+
+# FINAL IMAGE
+FROM alpine:3.22 AS alpine
+
+WORKDIR /app
+COPY --from=builder /app/simulation-exporter /app/simulation-exporter
+COPY --from=builder /etc/ssl/certs /etc/ssl/certs
 USER 1000
-ENTRYPOINT ["/app/entrypoint.sh"]
+EXPOSE     8080
+ENTRYPOINT ["/app/simulation-exporter"]

@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/docker/go-units"
-	"github.com/prometheus/client_golang/prometheus"
 	"math/rand"
 	"regexp"
 	"strconv"
+
+	"github.com/docker/go-units"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
@@ -18,27 +19,27 @@ type Configuration struct {
 }
 
 type ConfigurationMetric struct {
-	Name  string
-	Help  string
-	Type  string
+	Name string
+	Help string
+	Type string
 
 	Labels []string
 
 	Items []ConfigurationMetricItem
 
-	prometheus struct{
-		gauge *prometheus.GaugeVec
-		summary *prometheus.SummaryVec
+	prometheus struct {
+		gauge     *prometheus.GaugeVec
+		summary   *prometheus.SummaryVec
 		histogram *prometheus.HistogramVec
 	}
 }
 
 type ConfigurationMetricItem struct {
-	Value string
-	value *float64
+	Value     string
+	value     *float64
 	rangeFrom *float64
-	rangeTo *float64
-	Labels map[string]string
+	rangeTo   *float64
+	Labels    map[string]string
 }
 
 func (m *ConfigurationMetric) Init() {
@@ -52,7 +53,6 @@ func (m *ConfigurationMetric) Init() {
 		}
 	}
 }
-
 
 func (m *ConfigurationMetricItem) parseValue() {
 	match := regexpValueRange.FindStringSubmatch(m.Value)
@@ -86,12 +86,6 @@ func (m *ConfigurationMetricItem) parseValue() {
 		valueFloat := float64(value)
 		m.value = &valueFloat
 	}
-}
-
-func (m *ConfigurationMetricItem) parseValueRange() {
-
-
-
 }
 
 func (m *ConfigurationMetricItem) parseFloatFromString(value string) (ret float64, error error) {

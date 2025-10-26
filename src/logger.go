@@ -1,13 +1,13 @@
 package main
 
 import (
-	"os"
-	"log"
 	"fmt"
+	"log"
+	"os"
 )
 
 const (
-	LoggerLogPrefix = ""
+	LoggerLogPrefix      = ""
 	LoggerLogPrefixError = "[ERROR] "
 )
 
@@ -47,5 +47,5 @@ func (l *DaemonLogger) Messsage(message string, sprintf ...interface{}) {
 
 // Log error object as message
 func (l *DaemonLogger) Error(msg string, err error) {
-	l.Println(fmt.Sprintf("%v%v: %v", LoggerLogPrefixError, msg, err))
+	l.Printf("%v%v: %v", LoggerLogPrefixError, msg, err)
 }
