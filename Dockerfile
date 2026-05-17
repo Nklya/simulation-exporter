@@ -7,7 +7,7 @@ COPY src/*.go ./
 RUN CGO_ENABLED=0 go build -o /app/simulation-exporter
 
 # FINAL IMAGE
-FROM alpine:3.22 AS alpine
+FROM alpine:3.23 AS alpine
 
 WORKDIR /app
 COPY --from=builder /app/simulation-exporter /app/simulation-exporter

@@ -1,0 +1,51 @@
+---
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data: {}
+  grafana_storage: {}
+
+services:
+  prometheus:
+    image: prom/prometheus:v3
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - 9090:9090
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:12.4
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - grafana_storage:/var/lib/grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_USERS_VIEWERS_CAN_EDIT=true
+    networks:
+      - monitoring
+
+  simulation-exporter:
+    build: . # TODO: Add publish image to CI and use image here
+    volumes:
+      - ./config/node_exporter.yaml:/app/config/config.yaml
+    command:
+      - '--config-file=/app/config/config.yaml'
+    networks:
+      - monitoring
