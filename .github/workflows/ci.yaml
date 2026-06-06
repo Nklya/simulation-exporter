@@ -1,0 +1,39 @@
+---
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Go CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: src/go.mod
+
+      - name: Download Go modules
+        run: go mod download
+        working-directory: src
+
+      - name: Check gofmt
+        run: |
+          gofmt -d .
+          test -z $(gofmt -l .)
+        working-directory: src
+
+      - name: Check go vet
+        run: go vet ./...
+        working-directory: src
+
+      - name: Build project
+        run: go build -v ./...
+        working-directory: src
