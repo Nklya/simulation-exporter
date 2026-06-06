@@ -49,10 +49,3 @@ How to run
 -------------
 
 Configure Prometheus to collect metrics from exporter and visualize simulated metrics with Grafana.
-
-TODO
--------------
-
-* Add docker-compose with them to this repo
-* Add CI with Docker image release to ghcr.io
-* Add docs to Readme on how simulator works
