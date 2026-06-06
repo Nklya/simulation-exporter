@@ -1,10 +1,11 @@
-FROM golang:1.24-alpine AS builder
+FROM --platform=${BUILDPLATFORM} golang:1.24-alpine AS builder
 
 WORKDIR /app
 COPY src/go.mod src/go.sum ./
 RUN go mod download
 COPY src/*.go ./
-RUN CGO_ENABLED=0 go build -o /app/simulation-exporter
+ARG TARGETPLATFORM
+RUN CGO_ENABLED=0 GOOS=linux GOARCH="${TARGETPLATFORM#*/}" go build -o /app/simulation-exporter
 
 # FINAL IMAGE
 FROM alpine:3.23 AS alpine
