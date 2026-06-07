@@ -10,7 +10,6 @@ volumes:
 services:
   prometheus:
     image: prom/prometheus:v3
-    container_name: prometheus
     restart: unless-stopped
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
@@ -28,7 +27,6 @@ services:
 
   grafana:
     image: grafana/grafana:12.4
-    container_name: grafana
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -42,7 +40,8 @@ services:
       - monitoring
 
   simulation-exporter:
-    build: . # TODO: Add publish image to CI and use image here
+    image: ghcr.io/nklya/simulation-exporter:latest
+    restart: unless-stopped
     volumes:
       - ./config/node_exporter.yaml:/app/config/config.yaml
     command:
