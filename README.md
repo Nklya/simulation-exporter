@@ -2,8 +2,8 @@ Simulation Exporter
 ===================
 
 [![license](https://img.shields.io/github/license/webdevops/simulation-exporter.svg)](https://github.com/webdevops/simulation-exporter/blob/master/LICENSE)
-[![Docker](https://img.shields.io/badge/docker-webdevops%2Fsimulation--exporter-blue.svg?longCache=true&style=flat&logo=docker)](https://hub.docker.com/r/webdevops/simulation-exporter/)
-[![Docker Build Status](https://img.shields.io/docker/build/webdevops/simulation-exporter.svg)](https://hub.docker.com/r/webdevops/simulation-exporter/)
+[![CI](https://github.com/Nklya/simulation-exporter/actions/workflows/ci.yaml/badge.svg)](https://github.com/Nklya/simulation-exporter/actions/workflows/ci.yaml)
+[![Build Docker image](https://github.com/Nklya/simulation-exporter/actions/workflows/docker.yaml/badge.svg)](https://github.com/Nklya/simulation-exporter/actions/workflows/docker.yaml)
 
 Prometheus exporter for simulated metrics (eg. testing)
 

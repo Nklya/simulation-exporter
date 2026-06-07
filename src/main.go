@@ -12,9 +12,8 @@ import (
 )
 
 const (
-	Author                         = "webdevops.io"
-	Version                        = "0.1.0"
-	AZURE_RESOURCEGROUP_TAG_PREFIX = "tag_"
+	Author  = "webdevops.io"
+	Version = "0.2.1"
 )
 
 var (
@@ -44,7 +43,7 @@ func main() {
 	// set verbosity
 	Verbose = len(opts.Verbose) >= 1
 
-	Logger.Messsage("Init Azure DevOps exporter v%s (written by %v)", Version, Author)
+	Logger.Messsage("Init simulation-exporter v%s (written by %v)", Version, Author)
 
 	Logger.Messsage("Init configuration")
 	initConfiguration()
@@ -82,7 +81,7 @@ func initArgparser() {
 	}
 }
 
-// Init and build Azure authorzier
+// Init and build exporter configuration
 func initConfiguration() {
 	data, err := os.ReadFile(opts.ConfigurationFile)
 	if err != nil {
